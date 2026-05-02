@@ -47,5 +47,5 @@ Then enter your 5-letter guess, set the feedback colors, and submit to update th
 
 ## References
 
-- 3B1B Wordle: [text](https://github.com/3b1b/videos/tree/e317d6c5eaa8370a2deb4d148c246b0d0e9fbe6f/_2022/wordle)
-- Wordle words: [text](https://www.kaggle.com/datasets/bcruise/wordle-valid-words/data)
+- 3B1B Wordle: [Repo](https://github.com/3b1b/videos/tree/e317d6c5eaa8370a2deb4d148c246b0d0e9fbe6f/_2022/wordle)
+- Wordle words: [Dataset](https://www.kaggle.com/datasets/bcruise/wordle-valid-words/data)
