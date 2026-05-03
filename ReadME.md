@@ -90,11 +90,11 @@ python GUI.py
 
 The interface is divided into three panels:
 
-| Panel                        | What it shows                                                                 |
-|-----------------------------|------------------------------------------------------------------------------|
-| **Left – Mission Progression**  | Your last 6 guesses with colour feedback *(green/yellow/grey)*.           |
-| **Centre – Command Input**      | 5-letter guess entry, colour selector buttons, **Submit/Reset** controls. |
-| **Right – Intel Report**        | Two scrollable lists: **Strategic Suggestions** (top) and **Answer Likelihood** (bottom). |
+| Panel | What it shows |
+| ----------------- | ------------------------------------------------------------------------------ |
+| **Left – Mission Progression** | Your last 6 guesses with colour feedback *(green/yellow/grey)*. |
+| **Centre – Command Input** | 5-letter guess entry, colour selector buttons, **Submit/Reset** controls. |
+| **Right – Intel Report** | Two scrollable lists: **Strategic Suggestions** (top) and **Answer Likelihood** (bottom). |
 
 ## Typical Play Session
 
@@ -152,14 +152,14 @@ Storage: ~168 MB for the default word list (≈13,000 × 13,000).
 
 For each guess, the engine:
 
-1. Extracts the row of the pattern matrix corresponding to that guess, but only for the currently possible answers.
+A. Extracts the row of the pattern matrix corresponding to that guess, but only for the currently possible answers.
 
-2. Computes the weighted Shannon entropy of the resulting pattern distribution: 
+B. Computes the weighted Shannon entropy of the resulting pattern distribution:
 
 >entropy = - Σ p(pattern) × log₂(p(pattern))
 where p(pattern) is the sum of the normalised probabilities of all remaining answers that would give that pattern.
 
-3. Combines entropy with the win probability of the guess (if it is a candidate answer) according to a phase‑aware scoring function:
+C. Combines entropy with the win probability of the guess (if it is a candidate answer) according to a phase‑aware scoring function:
 
 | Turn                         | Strategy                                 | Score Formula                          |
 |------------------------------|------------------------------------------|----------------------------------------|
