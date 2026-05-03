@@ -6,7 +6,7 @@
 ![Release](https://img.shields.io/badge/release-exe-9cf)
 
 A **Python-based Wordle assistant** that combines probability‑weighted candidate selection with entropy‑driven guess scoring, delivered through a dark‑themed tactical GUI.  
-Inspired by [3Blue1Brown’s Wordle video & code](https://github.com/3b1b/videos/tree/e317d6c5eaa8370a2deb4d148c246b0d0e9fbe6f/_2022/wordle).[reference:0]
+Inspired by [3Blue1Brown’s Wordle video & code](https://github.com/3b1b/videos/tree/e317d6c5eaa8370a2deb4d148c246b0d0e9fbe6f/_2022/wordle).
 
 ---
 
@@ -27,14 +27,14 @@ Inspired by [3Blue1Brown’s Wordle video & code](https://github.com/3b1b/videos
 
 ## What It Does
 
-- **Loads a full Wordle word list** with real‑world frequency‑derived probabilities (Zipf scale → linear weights).[reference:1]
-- **Uses a precomputed response‑pattern matrix** (`wordle_full_matrix.npy`) to evaluate every possible guess against every possible secret **instantly**.[reference:2]
-- **Scores every guess** by its *expected information gain* (Shannon entropy) and, when appropriate, its *win probability*.[reference:3]
+- **Loads a full Wordle word list** with real‑world frequency‑derived probabilities (Zipf scale → linear weights).
+- **Uses a precomputed response‑pattern matrix** (`wordle_full_matrix.npy`) to evaluate every possible guess against every possible secret **instantly**.
+- **Scores every guess** by its *expected information gain* (Shannon entropy) and, when appropriate, its *win probability*.
 - **Suggests two kinds of moves:**
   - **Strategic Suggestions** – high‑entropy words to **narrow** the remaining answer pool.
   - **Answer Likelihood** – high‑probability candidate words for **final solves**.
-- **Tracks your game** in a 6‑row visual progression grid, showing colour‑coded feedback after each guess.[reference:4]
-- **Adapts its scoring strategy** as the game progresses (pessimistic early, balanced mid, aggressive late).[reference:5]
+- **Tracks your game** in a 6‑row visual progression grid, showing colour‑coded feedback after each guess.
+- **Adapts its scoring strategy** as the game progresses (pessimistic early, balanced mid, aggressive late).
 
 ---
 
