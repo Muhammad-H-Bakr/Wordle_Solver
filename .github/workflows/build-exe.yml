@@ -38,10 +38,12 @@ jobs:
       run: |
         # We bundle everything into one standalone file
         pyinstaller --noconsole --onefile --clean `
-        --name "Wordle-Strat-Console" `
-        --add-data "scientific_word_data.csv;." `
-        --add-data "wordle_full_matrix.npy;." `
-        GUI.py
+        pyinstaller --noconsole --onefile --clean `                        
+         --name "Wordle-Strat-Console" `
+         --icon "icon.ico" `
+         --add-data "scientific_word_data.csv;." `
+         --add-data "wordle_full_matrix.npy;." `
+         GUI.py
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v3
