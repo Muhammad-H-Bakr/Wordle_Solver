@@ -40,7 +40,7 @@ jobs:
         GUI.py
 
     - name: Create GitHub Release
-      uses: softprop/action-gh-release@v2
+      uses: softprops/action-gh-release@v3
       with:
         files: dist/Wordle-Strat-Console.exe
         name: Release ${{ github.ref_name }}
