@@ -5,7 +5,7 @@ from Engine import WordleEngine
 import random
 
 # --- CONFIGURATION ---
-TEST_HARD_MODE = False
+TEST_HARD_MODE = True  # Set to True for Hard Mode testing, False for Standard Mode
 SAMPLE_SIZE = 200
 NUM_CORES = mp.cpu_count() - 1
 
@@ -44,61 +44,77 @@ def worker_task(word_chunk, log_queue):
 def listener_task(log_queue, total_expected):
     count = 0
     results = []
-    distribution = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, "fail": 0}
+    morgue = []  # Detailed tracking for Turn 7+ cases
+    # Expanded distribution to track Turn 7 explicitly
+    distribution = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, "fail": 0}
     start_time = time.time()
 
     while count < total_expected:
         target, turns = log_queue.get()
         count += 1
 
-        # Track Distribution
         if 0 < turns <= 6:
             distribution[turns] += 1
             results.append(turns)
-        elif turns > 6:
-            distribution[6] += 1  # Any success > 6
-            results.append(turns)
+        elif turns >= 7:
+            # Record exactly how many turns it took in the morgue
+            morgue.append(f"{target.upper()} ({turns} turns)")
+            if turns == 7:
+                distribution[7] += 1
+                results.append(7)
+            else:
+                distribution["fail"] += 1
         else:
             distribution["fail"] += 1
+            morgue.append(f"{target.upper()} (COLLAPSED)")
 
-        # Real-time progress
         if count % 10 == 0 or count == total_expected:
             avg = sum(results) / len(results) if results else 0
             print(
-                f"🛰️  [PROFILING: {count:04d}/{total_expected}] | Current Avg: {avg:.3f} | Last: {target.upper()}"
+                f"[PROFILING: {count:04d}/{total_expected}] | Avg: {avg:.3f} | Last: {target.upper()}"
             )
 
-    end_time = time.time()
-    total_time = end_time - start_time
+    total_time = time.time() - start_time
+    # Survival is strictly 6 turns or fewer
+    success_count = sum(1 for r in results if r <= 6)
+    failure_count = len(morgue)
 
-    # --- RIGOROUS TEST ANALYSIS REPORT ---
     print("\n" + "═" * 50)
-    print(" 💠 BEAST ENGINE: FORENSIC ARCHITECTURE REPORT 💠")
+    print("FORENSIC ARCHITECTURE REPORT")
     print("═" * 50)
     print(f"STATUS:         MISSION COMPLETE")
     print(f"THROUGHPUT:     {total_expected / total_time:.2f} words/sec")
-    print(f"EFFICIENCY:     {sum(results)/len(results):.4f} Avg Turns")
+    print(
+        f"EFFICIENCY:     {sum(results)/len(results) if results else 0:.4f} Avg Turns"
+    )
+    print(f"SURVIVAL RATE:  {((success_count / total_expected) * 100):.2f}%")
     print("═" * 50)
 
-    print("📈 SOLUTION DENSITY DISTRIBUTION:")
-    for t in range(1, 7):
-        label = "SURPASSES PROOF" if t <= 5 else "STRESS DETECTED"
+    print("SOLUTION DENSITY DISTRIBUTION:")
+    for t in range(1, 8):
         count_val = distribution[t]
         percent = (count_val / total_expected) * 100
         bar = "█" * int(percent / 2)
-        print(f" Turn {t}: {percent:5.1f}% | {bar} ({count_val}) [{label}]")
-
-    if distribution["fail"] > 0:
-        print(f" ❌ FAILURES: {distribution['fail']} words collapsed.")
-
-    print("\n🧐 ARCHITECTURAL VERDICT:")
-    if max(results) <= 5:
-        print(
-            " > PROOF VALIDATED: The engine is a TRUE SOLVER. No word exceeded Turn 5."
+        tag = (
+            "[SURPASSES PROOF]"
+            if t <= 5
+            else "[CRITICAL STRESS]" if t == 6 else "[MISSION FAILURE]"
         )
+        print(f" Turn {t}: {percent:5.1f}% | {bar} ({count_val}) {tag}")
+
+    if morgue:
+        print("\nTHE MORGUE (Words exceeding Turn 6):")
+        print(f" Total Identified: {failure_count}")
+        # Print words in columns
+        for i in range(0, len(morgue), 4):
+            print("   " + " | ".join(morgue[i : i + 4]))
+
+    print("\nARCHITECTURAL VERDICT:")
+    if failure_count == 0:
+        print(" > PROOF VALIDATED: TRUE SOLVER. 100% Efficiency within 6 turns.")
     else:
         print(
-            f" > PROOF ADJUSTED: The engine is an OPTIMIZER. Max turns hit {max(results)}."
+            f" > PROOF ADJUSTED: OPTIMIZER. {failure_count} cases exceeded the limit."
         )
     print("═" * 50)
 
@@ -113,12 +129,12 @@ def run_live_stress_test():
         # This ensures we aren't just testing 'A' words or 'first' words
         if len(all_solutions) > SAMPLE_SIZE:
             print(
-                f"🎲 Randomly selecting {SAMPLE_SIZE} targets from pool of {len(all_solutions)}..."
+                f"Randomly selecting {SAMPLE_SIZE} targets from pool of {len(all_solutions)}..."
             )
             test_pool = random.sample(all_solutions, SAMPLE_SIZE)
         else:
             print(
-                f"⚠️ Sample size exceeds pool. Testing all {len(all_solutions)} words."
+                f"Sample size exceeds pool. Testing all {len(all_solutions)} words."
             )
             test_pool = all_solutions
             random.shuffle(test_pool)  # Shuffle anyway for non-linear testing
@@ -139,7 +155,7 @@ def run_live_stress_test():
 
     actual_total = sum(len(c) for c in chunks)
 
-    print(f"🚀 STARTING RANDOMIZED LIVE STRESS TEST ({NUM_CORES} CORES)")
+    print(f"STARTING RANDOMIZED LIVE STRESS TEST ({NUM_CORES} CORES)")
     print(
         f"MODAL ANALYSIS: {'HARD MODE' if TEST_HARD_MODE else 'NORMAL MODE (SOLVER)'}"
     )
